@@ -39,12 +39,13 @@ class NodeElement {
     let neighbours = []
     let enqueuedNode
     let newNode
-    //NON RIAGGIUNGERE QUELLI ESAMINATI
+
     if(this.row < this.aStar.matrixLenght-1) {
       enqueuedNode = openQueue.find(node=>node.row===this.row+1 && node.column===this.col)
       if(!enqueuedNode){
         newNode = this.aStar.nodes.find(node=>(node.row===this.row+1 && node.col===this.col))
-        if(newNode.wall===false && !this.aStar.alreadyChecked.includes(newNode)){
+        if(newNode.wall===false && !this.aStar.alreadyChecked.includes(newNode) && !this.aStar.openQueue.includes(newNode) ) {
+          console.log(this.aStar.alreadyChecked.includes(newNode))
           newNode.heuristicCalculation(this)
           neighbours.push(newNode)
         }
@@ -56,7 +57,7 @@ class NodeElement {
       enqueuedNode = openQueue.find(node=>node.row===this.row && node.col===this.col+1)
       if(!enqueuedNode){
         newNode = this.aStar.nodes.find(node=>(node.row===this.row && node.col===this.col+1))
-        if(newNode.wall===false && !this.aStar.alreadyChecked.includes(newNode)){
+        if(newNode.wall===false && !this.aStar.alreadyChecked.includes(newNode) && !this.aStar.openQueue.includes(newNode) ){
           newNode.heuristicCalculation(this)
           neighbours.push(newNode)
         }
@@ -68,7 +69,7 @@ class NodeElement {
       enqueuedNode = openQueue.find(node=>node.row===this.row-1 && node.col===this.col )
       if(!enqueuedNode){
         newNode = this.aStar.nodes.find(node=>(node.row===this.row-1 && node.col===this.col))
-        if(newNode.wall===false && !this.aStar.alreadyChecked.includes(newNode)){
+        if(newNode.wall===false && !this.aStar.alreadyChecked.includes(newNode) && !this.aStar.openQueue.includes(newNode) ){
           newNode.heuristicCalculation(this)
           neighbours.push(newNode)
         }
@@ -80,7 +81,7 @@ class NodeElement {
       enqueuedNode = openQueue.find(node=>node.row===this.row && node.col===this.col-1 && node.wall===false)
       if(!enqueuedNode){
         newNode = this.aStar.nodes.find(node=>(node.row===this.row && node.col===this.col-1))
-        if(newNode.wall===false && !this.aStar.alreadyChecked.includes(newNode)){
+        if(newNode.wall===false && !this.aStar.alreadyChecked.includes(newNode) && !this.aStar.openQueue.includes(newNode) ){
           newNode.heuristicCalculation(this)
           neighbours.push(newNode)
         }
@@ -88,6 +89,7 @@ class NodeElement {
       enqueuedNode.heuristicCalculation(this)
       }
     }
+    //if(neighbours.includes(x=>x.row==1 && x.col==2)){debugger}
     return neighbours
 
   }

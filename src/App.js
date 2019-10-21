@@ -101,8 +101,6 @@ class App extends React.Component {
 
 
   handleClick = (e,clickMode,array=[]) => {
-    let color
-    let wall
     switch(clickMode){
       case "start":
         this.setToggleCase(e,"start","green")
