@@ -16,9 +16,7 @@ class NodeElement {
 
 
   heuristicCalculation(node) {
-    this.through=node
     this.eucledianDistance = this.aStar.eucledianDistance(this)
-    //difficultySums bug
     let difficultySums
     difficultySums = this.difficulty + Number(node.difficultySums)
     if( this.difficultySums === '' ) {
@@ -41,7 +39,7 @@ class NodeElement {
     let newNode
 
     if(this.row < this.aStar.matrixLenght-1) {
-      enqueuedNode = openQueue.find(node=>node.row===this.row+1 && node.column===this.col)
+      enqueuedNode = openQueue.find(node=>node.row===this.row+1 && node.col===this.col)
       if(!enqueuedNode){
         newNode = this.aStar.nodes.find(node=>(node.row===this.row+1 && node.col===this.col))
         if(newNode.wall===false && !this.aStar.alreadyChecked.includes(newNode) && !this.aStar.openQueue.includes(newNode) ) {
