@@ -128,7 +128,7 @@ class App extends React.Component {
 
   renderGrid = () => {
     let grid = this.state.grid
-    return <div>{grid.map((row,i)=><div style={{display: 'flex'}}>{row.map((element, j)=><div data-difficulty={1} id={`${i}-${j}`} onClick={(e)=>this.handleClick(e,this.state.clickMode,[i,j])} style={{height: "100px", width: '100px', borderStyle: 'solid', backgroundColor: element.color, fontSize:'50px', lineHeight: '100px', textAlign: 'center'}}>{element.difficulty==0 ? '' : element.difficulty }</div>)}</div>)}</div>
+    return <div>{grid.map((row,i)=><div style={{display: 'flex'}}>{row.map((element, j)=><div data-difficulty={1} id={`${i}-${j}`} onClick={(e)=>this.handleClick(e,this.state.clickMode,[i,j])} style={{height: "100px", overflowX: 'hidden', width: '100px', borderStyle: 'solid', backgroundColor: element.color, fontSize:'50px', lineHeight: '100px', textAlign: 'center'}}>{element.difficulty==0 ? '' : element.difficulty }</div>)}</div>)}</div>
   }
 
   reset = async () => {
@@ -153,6 +153,35 @@ class App extends React.Component {
     })
   }
 
+  randomMaze = () => {
+    let dim = Number(this.state.gridDimension)
+    let grid=new Array(dim)
+    for(let i=0;i<dim;i++){
+      grid[i]= new Array(dim).fill({wall:false, difficulty: 1, color: 'white'})
+    }
+    //80%  increased Difficulties
+    for(let i=0;i<Math.floor(dim*dim*0.8);i++){
+      grid[Math.floor(Math.random()*(dim))][Math.floor(Math.random()*(dim))] = {wall:false, difficulty: Math.floor((Math.random()*9)+1), color: 'white'}
+    }
+    //10% wall
+    for(let i=0;i<Math.floor(dim*dim*0.3);i++){
+      grid[Math.floor(Math.random()*(dim))][Math.floor(Math.random()*(dim))] = {wall:true, difficulty: Infinity, color: 'black'}
+    }
+    //start
+    let start = [String(Math.floor(Math.random()*(dim-1))), String(Math.floor(Math.random()*(dim-1)))]
+    grid[start[0]][start[1]] = {wall:false, difficulty: 0, color: 'green'}
+    //end
+    let end = [String(Math.floor(Math.random()*(dim-1))), String(Math.floor(Math.random()*(dim-1)))]
+    grid[end[0]][end[1]] = {wall:false, difficulty: 1, color: 'red'}
+
+    this.setState({
+      grid,
+      start,
+      end
+    })
+
+  }
+
   optimalPath = () => {
     if(!!this.state.start && !!this.state.end){
       this.setState({
@@ -163,12 +192,14 @@ class App extends React.Component {
         error: true
       })
     }
-    let aStarInstance = new AStar (this.state.start,this.state.end, this.state.grid)
+    let grid = this.state.grid
+    let aStarInstance = new AStar (this.state.start,this.state.end, grid)
      aStarInstance.startAlgorithm()
      let optimalPath = aStarInstance.optimalPath
-     let grid =  this.state.grid
      let sum = 0
-     optimalPath.forEach(node=>{
+
+     optimalPath.forEach((node,i)=>{
+       if(i==0 || i==optimalPath.length-1){return} 
        sum += node.difficulty
        let difficulty = grid[node.row][node.col].difficulty
        grid[node.row][node.col] = {color: 'yellow', difficulty: difficulty, wall: false}
@@ -203,6 +234,9 @@ class App extends React.Component {
         <button style={buttonStyle} name="wall" onClick={(e)=>this.selectMode(e)}> Select Wall </button>
         <button style={buttonStyle} name="free" onClick={(e)=>this.selectMode(e)}> Free </button>
         <button style={buttonStyle} name="increase" onClick={(e)=>this.selectMode(e)}> Increase difficulty </button>
+
+        <button style={buttonStyle} onClick={()=>this.randomMaze()}> Create Random Maze</button>
+
         <button style={buttonStyle} onClick={()=>this.optimalPath()}> Calculate Optimal Path </button>
 
       </div>

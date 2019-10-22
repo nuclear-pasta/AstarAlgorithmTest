@@ -45,7 +45,6 @@ class NodeElement {
       if(!enqueuedNode){
         newNode = this.aStar.nodes.find(node=>(node.row===this.row+1 && node.col===this.col))
         if(newNode.wall===false && !this.aStar.alreadyChecked.includes(newNode) && !this.aStar.openQueue.includes(newNode) ) {
-          console.log(this.aStar.alreadyChecked.includes(newNode))
           newNode.heuristicCalculation(this)
           neighbours.push(newNode)
         }
@@ -78,7 +77,7 @@ class NodeElement {
       }
     }
     if(this.col > 0) {
-      enqueuedNode = openQueue.find(node=>node.row===this.row && node.col===this.col-1 && node.wall===false)
+      enqueuedNode = openQueue.find(node=>node.row===this.row && node.col===this.col-1)
       if(!enqueuedNode){
         newNode = this.aStar.nodes.find(node=>(node.row===this.row && node.col===this.col-1))
         if(newNode.wall===false && !this.aStar.alreadyChecked.includes(newNode) && !this.aStar.openQueue.includes(newNode) ){
@@ -89,7 +88,6 @@ class NodeElement {
       enqueuedNode.heuristicCalculation(this)
       }
     }
-    //if(neighbours.includes(x=>x.row==1 && x.col==2)){debugger}
     return neighbours
 
   }
